@@ -1,4 +1,5 @@
 #include <iostream>
+#include <cmath>
 #include <cstdio>
 
 using namespace std;
@@ -27,11 +28,14 @@ int main()
 {
 	freopen("nab.in", "r", stdin);
 	freopen("nab.out", "w", stdout);
+	freopen("nab.in", "r", stdin);
+	freopen("nab.out", "w", stdout);freopen("nab.in", "r", stdin);
+	freopen("nab.out", "w", stdout);
 	
 	int a, b, n;
 	for(int i=1; i<=3000000; i++)
 	{
-		scanf("%d %d %d", &a, &b, &n);
+		scanf("%d %d %d", &n, &a, &b);
 		printf("a: %d, b: %d, n: %d\n", a, b, n);
 		printf("%d ---\a---- %d\n", countNAB(a, b, n), countNABa(a, b, n));
 		if(countNAB(a,b,n) != countNABa(a,b,n))
