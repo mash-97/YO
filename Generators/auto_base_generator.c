@@ -62,7 +62,7 @@ int main()
 	get_user_name:
 		printf("Enter valid user name (without any space): ");
 		scanf(" %s", user_name);
-		delete_unnecessary_spaces(user_name);
+		delete_unnecessary_spaces(user_name, "");
 		lowerify(user_name);
 		printf("### user_name: %s\n", user_name);
 		if(!check_name(user_name))
@@ -72,7 +72,7 @@ int main()
 	get_id:
 		printf("Enter your id (without any '-' or space): ");
 		scanf(" %s", id);
-		delete_unnecessary_spaces(id);
+		delete_unnecessary_spaces(id, "");
 		printf("### user_id: %s\n", id);
 		if(!check_name(user_name))
 			goto get_id;
