@@ -23,6 +23,14 @@ void takeTestCases()
 		scanf("%lld %lld %lld", &test_cases[i][0], &test_cases[i][1], &test_cases[i][2]);
 }
 
+int checkTestCases()
+{
+	for(int i=0; i<ntest_cases; i++)
+		if(test_cases[i][0]<0 || test_cases[i][1]<0 || test_cases[i][2]<0)
+			return 0;
+	return 1;
+}
+
 void displayHeader()
 {
 	printf("--------------\n");
@@ -51,7 +59,7 @@ void displayHeader()
 int main()
 {
 	displayHeader();
-	createFolder("Nab_Attacks");
+	createFolder(NAB_ATTACKs_FOLDER_NAME);
 	
 	char rabbits[100001];
 	char file_path[200001];
@@ -84,15 +92,28 @@ int main()
 			strcpy(file_path, NAB_ATTACKs_FOLDER_NAME);
 			strcat(file_path, path_sep);
 			strcat(file_path, rabbits);
-			printf("\nGive your nab test cases for all:\n\n");
-			takeTestCases();
+			take_for_all:
+				printf("\nGive your nab test cases for all:\n\n");
+				takeTestCases();
+				if(!checkTestCases())
+				{
+					printf("\n------->Test Cases seems incorrect! Try again !!!\n\n");
+					goto take_for_all;
+				}
+			
 			burnNabTestCases(file_path);
 			flag = 1;
 		}
 		else
 		{
-			printf("\nGive your nab test cases: \n\n");
-			takeTestCases();
+			take_for_mul:
+				printf("\nGive your nab test cases: \n\n");
+				takeTestCases();
+				if(!checkTestCases())
+				{
+					printf("\n------->Test Cases seems incorrect! Try again !!!\n\n");
+					goto take_for_mul;
+				}
 			
 			token = strtok(rabbits, " ,");
 			while(token!=NULL)

@@ -241,10 +241,10 @@ int main()
 	displayHeader();
 	char file_path[200001];
 	takePreferences();
-	strcpy(file_path, "mash.pref");
+	strcpy(file_path, ".mash.pref");
 	burnPreferences(file_path);
 
 	printf("\nYo! Your preferences are taken carefully!\n\n\a");
-	
+	for(int i=0; i<=1000000000; i++);
 	return 0;
 }

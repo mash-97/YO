@@ -23,29 +23,6 @@ int main()
 	freopen("nab.in", "r", stdin);
 	freopen("nab.out", "w", stdout);
 
-	freopen("nab.in", "r", stdin);
-	freopen("nab.out", "w", stdout);
-
-	freopen("nab.in", "r", stdin);
-	freopen("nab.out", "w", stdout);
-
-	freopen("nab.in", "r", stdin);
-	freopen("nab.out", "w", stdout);
-
-	freopen("nab.in", "r", stdin);
-	freopen("nab.out", "w", stdout);
-
-	freopen("nab.in", "r", stdin);
-	freopen("nab.out", "w", stdout);
-
-	freopen("nab.in", "r", stdin);
-	freopen("nab.out", "w", stdout);
-
-	freopen("nab.in", "r", stdin);
-	freopen("nab.out", "w", stdout);
-
-	freopen("nab.in", "r", stdin);
-	freopen("nab.out", "w", stdout);
 	
 	long long int a, b, n;
 	int c = 0;

@@ -1,7 +1,7 @@
 #include "lib_helper.h"
 
 int ntest_cases;
-long long int test_cases[100][2];
+int test_cases[100][2];
 
 void burnProjectileTestCases(char *tc_file_path)
 {
@@ -10,7 +10,7 @@ void burnProjectileTestCases(char *tc_file_path)
 	
 	fprintf(tc_fp, "%d\n", ntest_cases);
 	for(int i=0; i<ntest_cases; i++)
-		fprintf(tc_fp, "%lld %lld\n", test_cases[i][0], test_cases[i][1]);
+		fprintf(tc_fp, "%d %d\n", test_cases[i][0], test_cases[i][1]);
 	
 	fclose(tc_fp);
 }
@@ -20,7 +20,15 @@ void takeTestCases()
 	scanf("%d", &ntest_cases);
 	
 	for(int i=0; i<ntest_cases; i++)
-		scanf("%lld %lld", &test_cases[i][0], &test_cases[i][1]);
+		scanf("%d %d", &test_cases[i][0], &test_cases[i][1]);
+}
+
+int checkTestCases()
+{
+	for(int i=0; i<ntest_cases; i++)
+		if(test_cases[i][0]<0 || test_cases[i][0]>100000000 || test_cases[i][1]<0 || test_cases[i][1]>360)
+			return 0;
+	return 1;
 }
 
 void displayHeader()
@@ -84,16 +92,29 @@ int main()
 			strcpy(file_path, PROJECTILE_ATTACKs_FOLDER_NAME);
 			strcat(file_path, path_sep);
 			strcat(file_path, rabbits);
+			
+			take_for_all:
 			printf("\nGive your nab test cases for all:\n\n");
 			takeTestCases();
+			if(!checkTestCases())
+			{
+				printf("\n------->Test Cases seems incorrect! Try again !!!\n\n");
+				goto take_for_all;
+			}
+			
 			burnProjectileTestCases(file_path);
 			flag = 1;
 		}
 		else
 		{
+			take_for_mul:
 			printf("\nGive your nab test cases: \n\n");
 			takeTestCases();
-			
+			if(!checkTestCases())
+			{
+				printf("\n------->Test Cases seems incorrect! Try again !!!\n\n");
+				goto take_for_mul;
+			}
 			token = strtok(rabbits, " ,");
 			while(token!=NULL)
 			{

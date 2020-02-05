@@ -1,17 +1,17 @@
 require_relative("helper_classes")
 
-class Nab
+class Projectile
 	Time_Limit = 1 #s
 	BaseCase_PassScore = 5
 	Attack_DossScore = 5
 	
-	Program_File_rgx = /.*nab\.(c|cpp)$/
+	Program_File_rgx = /.*projectile\.(c|cpp)$/
 	
-	Base_Test_Cases_File_Path = ".Test_Base/nab.test"
-	Base_Program_File_Path = ".Test_Base/base_nab.c"
+	Base_Test_Cases_File_Path = ".Test_Base/projectile.test"
+	Base_Program_File_Path = ".Test_Base/base_projectile.c"
 	
-	Attacks_Folder_Name = ".Nab_Attacks"
-	NAB_FOLDER_NAME = "nab"
+	Attacks_Folder_Name = ".Projectile_Attacks"
+	
 	BASE_PROGRAM = CProgram.new(Base_Program_File_Path)
 	
 	attr_accessor :folder_path
@@ -30,7 +30,7 @@ class Nab
 	def initialize(owner_obj)
 		
 		@owner = owner_obj
-		@folder_path = @owner.folder_path+"/"+NAB_FOLDER_NAME
+		@folder_path = @owner.folder_path
 		
 		files = Dir.glob("#{@folder_path}/*")
 		
@@ -52,8 +52,7 @@ class Nab
 	
 	
 	def testBaseCases()
-		puts("@program: #{@program.to_s}, @base_program: #{@base_program.to_s}")
-		return false if @program==nil or @base_program==nil
+		
 		return false if not @program.compiled and not @base_program.compiled
 		
 		test_case = File.readlines(Base_Test_Cases_File_Path).join()
@@ -85,7 +84,7 @@ class Nab
 		players.each do |player|
 			next if player == @owner
 			attacks.each do |id, test_case_file_path|
-				if(id=~/\*/ || id.to_i == player.id.to_i) then
+				if(id=~/\.\*/ || id.to_i == player.id.to_i) then
 					# read test_cases from test_case_file_path
 					test_case = File.readlines(test_case_file_path).join()
 					
@@ -98,13 +97,13 @@ class Nab
 					end
 					
 					# rabbit should be more carefull, although @owner wins again
-					if not player.nab.program.run(test_case, Time_Limit) then
+					if not player.projectile.program.run(test_case, Time_Limit) then
 						@owner.total_scores += Attack_DossScore
 						player.total_scores -= Attack_DossScore
 					end
 					
 					# rabbit's program output needs to be match with base_program's output
-					if(base_program_runs and (player.nab.program.readOutput() == @base_program.readOutput())) then
+					if(base_program_runs and (player.projectile.program.readOutput() == @base_program.readOutput())) then
 						player.total_scores += Attack_DossScore
 					end
 					
@@ -125,3 +124,4 @@ class Nab
 	end
 
 end
+
