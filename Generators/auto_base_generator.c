@@ -1,16 +1,4 @@
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
-#include <math.h>
-#include "string_operations_lib.h"
-
-#if defined(_WIN32) || defined(_WIN64) || defined(WIN32)
-	#define touch "echo .> "
-	#define path_sep "\\"
-#else
-	#define touch "touch "
-	#define path_sep "/"
-#endif
+#include "lib_helper.h"
 
 int createUserFolder(char *folder_path)
 {	
@@ -34,26 +22,6 @@ int createUserFolder(char *folder_path)
 	return 1;
 }
 
-int createFile(char *folder_name, char *file_name)
-{
-	char path[1000];
-	strcpy(path, folder_name);
-	strcat(path, path_sep);
-	strcat(path, file_name);
-	
-	printf("\n\tCreating File: %s\n", path);
-	FILE *result = fopen(path, "w");
-	if(result==NULL)
-	{
-		printf("\tFailed To Create The File: %s\n", file_name);
-		exit(-1);
-	}
-	printf("\tFile Created Successfully: %s\n", file_name);
-	printf("\n");
-	fclose(result);
-	return 1;
-}
-
 int main()
 {
 	char user_name[40];
@@ -65,7 +33,7 @@ int main()
 		delete_unnecessary_spaces(user_name, "");
 		lowerify(user_name);
 		printf("### user_name: %s\n", user_name);
-		if(!check_name(user_name))
+		if(!allIsBetweenLetterDigits(user_name, ""))
 			goto get_user_name;
 	
 	printf("\n");
@@ -74,11 +42,13 @@ int main()
 		scanf(" %s", id);
 		delete_unnecessary_spaces(id, "");
 		printf("### user_id: %s\n", id);
-		if(!check_name(user_name))
+		if(!allIsBetweenDigits(id, ""))
 			goto get_id;
 	
 	// make user_id folder
-	char folder_path[110];
+	char folder_path[61];
+	char file_path[20001];
+	
 	strcpy(folder_path, user_name);
 	strcat(folder_path, "_");
 	strcat(folder_path, id);
@@ -98,6 +68,10 @@ int main()
 	printf("Going to create files defined in base_files.nms:: \n");
 	char file_name[111];
 	while(fscanf(f, " %[^\n]", file_name) != EOF)
+	{
+		strcpy(file_path, folder_path);
+		strcat(file_path, path_sep);
+		strcat(file_path, file_name);
 		createFile(folder_path, file_name);
 	
 	fclose(f);

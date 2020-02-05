@@ -2,6 +2,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <math.h>
+#include "lib_helper.h"
 
 #if defined(_WIN32) || defined(_WIN64) || defined(WIN32)
 	#define touch "echo .> "
@@ -17,92 +18,6 @@ char luxury_item[40];
 int number_of_childrens;
 int favn;
 
-int betweenAlphabets(char c)
-{
-	return (c>='A' && c<='Z') || (c>='a' && c<='z') ? 1 : 0;
-}
-int allIsBetweenAlphabets(char *string)
-{
-	int len = (int)strlen(string);
-	for(int i=0; i<len; i++)
-		if(!betweenAlphabets(string[i]))
-			return 0;
-	return 1;
-}
-
-int betweenDigits(char c)
-{
-	return (c>='0' && c<='9') ? 1 : 0;
-}
-
-int betweenTheseCases(char c, char *cases)
-{
-	int length = strlen(cases);
-	for(int i=0; i<length; i++)
-		if(c==cases[i])
-			return 1;
-	return 0;
-}
-
-int betweenLetterDigits(char c)
-{
-	return (betweenAlphabets(c) || betweenDigits(c)) ? 1 : 0;
-}
-int allIsBetweenLetterDigits(char *string)
-{
-	int len = strlen(string);
-	for(int i=0; i<len; i++)
-		if(!betweenLetterDigits(string[i]))
-			return 0;
-	return 1;
-}
-
-int checkIfAllIsDigits(char *string)
-{
-	int length = (int)strlen(string);
-	for(int i=0; i<length; i++)
-		if(!betweenDigits(string[i]))
-			return 0;
-	return 1;
-}
-
-void delete_unnecessary_spaces(char *string, char *special_cases)
-{
-	int length = strlen(string);
-	int space = 0;
-	int i=0, s;
-	
-	
-	for(i=0; string[i] == ' ' && i<length; i++);
-	for(s = 0; i<length; i++)
-	{
-		if(betweenAlphabets(string[i]) || betweenDigits(string[i]) || betweenTheseCases(string[i], special_cases))
-		{
-			if(!space)	space = 1;
-			string[s++] = string[i];
-		}
-		else if(space)
-		{
-			space = 0;
-			string[s++] = ' ';
-		}
-	}
-	for(i=s-1; string[i]==' ' && i>=0; i--);
-	string[i+1] = 0;
-}
-
-
-int createFile(char *path)
-{
-	FILE *result = fopen(path, "w");
-	if(result==NULL)
-	{
-		printf("\tFailed To Create The File: %s !!!\n\n", path);
-		exit(-1);
-	}
-	fclose(result);
-	return 1;
-}
 
 void burnMashAttackCases(char *tc_file_path)
 {
@@ -112,44 +27,47 @@ void burnMashAttackCases(char *tc_file_path)
 	fclose(tc_fp);
 }
 
-void lowerify(char *string)
-{
-	int len = (int)strlen(string);
-	for(int i=0; i<len; i++)
-		if(string[i]>='A' && string[i]<='Z') string[i] = string[i] - 'A' + 'a';
-}
 
 void takeAttackCases()
 {	
+	char num_string[1001];
+	
 	printf("\t(Use '_' instead of space in string type input)\n");
 	spouse_name:
 		printf("\tSpouse name : ");
 		scanf(" %s", spouse_name);
 		delete_unnecessary_spaces(spouse_name, "_");
-		lowerify(spouse_name);
-		if((int)strlen(spouse_name)<3 || !allIsBetweenAlphabets(spouse_name))
+		if((int)strlen(spouse_name)<3 || !allIsBetweenAlphabets(spouse_name, "_"))
 			goto spouse_name;
-			
 	printf("\t\n");
+	
+	
 	number_of_childrens:
 		printf("\tNumber of childrens: ");
-		scanf("%d", &number_of_childrens);
+		scanf(" %s", num_string);
+		if(ifTheresAAlphabet(num_string))
+			goto number_of_childrens;
+		number_of_childrens = atoi(num_string);
 		if(number_of_childrens<0 || number_of_childrens>10000000)
 			goto number_of_childrens;
-	
 	printf("\t\n");
+	
+	
 	luxury_item:
 		printf("\tLuxury item name: ");
 		scanf(" %s", luxury_item);
 		delete_unnecessary_spaces(luxury_item, "_");
 		lowerify(luxury_item);
-		if((int)strlen(luxury_item)<2 || !allIsBetweenLetterDigits(luxury_item))
+		if((int)strlen(luxury_item)<2 || !allIsBetweenLetterDigits(luxury_item, "_"))
 			goto luxury_item;
 	
 	printf("\t\n");
 	favn:
 		printf("\tFavourite Number (1-9): ");
-		scanf("%d", &favn);
+		scanf(" %s", num_string);
+		if(ifTheresAAlphabet(num_string))
+			goto favn;
+		favn = atoi(num_string);
 		if(favn<1 || favn>9)
 			goto favn;
 }
@@ -171,7 +89,20 @@ void displayHeader()
 	printf("Ex:: Attack -> 18115955, 18115935, ...\n\n");
 	
 }
-	
+
+void displayAttackChoices(char *rabbits)
+{
+	printf("\n");
+	printf("You attack choices for: %s\n", rabbits);
+	printf("--------------------------------------------------\n");
+	printf("Spouse name: %s\n", spouse_name);
+	printf("Number of Childrens: %d\n", number_of_childrens);
+	printf("Luxury Item Name: %s\n", luxury_item);
+	printf("Favourite Number: %d\n", favn);
+	printf("--------------------------------------------------\n");
+	printf("\n");
+}
+
 int main()
 {
 	displayHeader();
@@ -179,9 +110,11 @@ int main()
 	char file_path[200001];
 	char * token = NULL;
 	
+	int flag;
 	int token_length;
 	
 	attack_rabbits:
+		flag = 0;
 		printf("\n\n------------------------------------\n");
 		printf("Attack -> ");
 		scanf(" %[^\n]", rabbits);
@@ -201,10 +134,12 @@ int main()
 			
 		else if(strcmp(rabbits, "*")==0)
 		{
-			strcpy(file_path, rabbits);
+			strcpy(file_path, ".");
+			strcat(file_path, rabbits);
 			printf("\nEnter your Mash attack cases for all:\n\n");
 			takeAttackCases();
 			burnMashAttackCases(file_path);
+			flag = 1;
 		}
 		else
 		{
@@ -222,13 +157,20 @@ int main()
 				}
 				else
 				{
-					strcpy(file_path, token);
+					strcpy(file_path, ".");
+					strcat(file_path, token);
 					burnMashAttackCases(file_path);
+					flag = 1;
 				}
 				token = strtok(NULL, " ,");
 			}
 		}
-		printf("\nYo! Your choices are taken carefully! :D\n\n\a");
+		displayAttackChoices(rabbits);
+		if(flag)
+			printf("\nYo! Your choices are taken successfully! :D\n\n\a");
+		else
+			printf("\nChoices not taken !!!\n\n\a");
+			
 	goto attack_rabbits;	
 	
 	return 0;

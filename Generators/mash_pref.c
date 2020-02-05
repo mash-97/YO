@@ -2,6 +2,7 @@
 #include <string.h>
 #include <stdlib.h>
 #include <math.h>
+#include "lib_helper.h"
 
 #if defined(_WIN32) || defined(_WIN64) || defined(WIN32)
 	#define touch "echo .> "
@@ -19,99 +20,6 @@ int favn;
 
 int cindexes[4];
 int ccount;
-
-int betweenAlphabets(char c)
-{
-	return (c>='A' && c<='Z') || (c>='a' && c<='z') ? 1 : 0;
-}
-int allIsBetweenAlphabets(char *string)
-{
-	int len = (int)strlen(string);
-	for(int i=0; i<len; i++)
-		if(!betweenAlphabets(string[i]))
-			return 0;
-	return 1;
-}
-
-int betweenDigits(char c)
-{
-	return (c>='0' && c<='9') ? 1 : 0;
-}
-
-int betweenTheseCases(char c, char *cases)
-{
-	int length = strlen(cases);
-	for(int i=0; i<length; i++)
-		if(c==cases[i])
-			return 1;
-	return 0;
-}
-
-int betweenLetterDigits(char c)
-{
-	return (betweenAlphabets(c) || betweenDigits(c)) ? 1 : 0;
-}
-int allIsBetweenLetterDigits(char *string)
-{
-	int len = strlen(string);
-	for(int i=0; i<len; i++)
-		if(!betweenLetterDigits(string[i]))
-			return 0;
-	return 1;
-}
-
-int checkIfAllIsDigits(char *string)
-{
-	int length = (int)strlen(string);
-	for(int i=0; i<length; i++)
-		if(!betweenDigits(string[i]))
-			return 0;
-	return 1;
-}
-
-void delete_unnecessary_spaces(char *string, char *special_cases)
-{
-	int length = strlen(string);
-	int space = 0;
-	int i=0, s;
-	
-	
-	for(i=0; string[i] == ' ' && i<length; i++);
-	for(s = 0; i<length; i++)
-	{
-		if(betweenAlphabets(string[i]) || betweenDigits(string[i]) || betweenTheseCases(string[i], special_cases))
-		{
-			if(!space)	space = 1;
-			string[s++] = string[i];
-		}
-		else if(space)
-		{
-			space = 0;
-			string[s++] = ' ';
-		}
-	}
-	for(i=s-1; string[i]==' ' && i>=0; i--);
-	string[i+1] = 0;
-}
-
-void lowerify(char *string)
-{
-	int len = (int)strlen(string);
-	for(int i=0; i<len; i++)
-		if(string[i]>='A' && string[i]<='Z') string[i] = string[i] - 'A' + 'a';
-}
-
-int createFile(char *path)
-{
-	FILE *result = fopen(path, "w");
-	if(result==NULL)
-	{
-		printf("\tFailed To Create The File: %s !!!\n\n", path);
-		exit(-1);
-	}
-	fclose(result);
-	return 1;
-}
 
 void burnPreferences(char *tc_file_path)
 {
@@ -217,7 +125,9 @@ void takePreferences()
 		children_numbers[i][0] = -1;
 	}
 	
+	char temp_string[1001];
 	int index;
+	
 	printf("(Use '_' instead of space in string type input)\n\n");
 	//spouse_names:
 	printf("Choices for spouse names: \n\n");
@@ -226,7 +136,11 @@ void takePreferences()
 		{
 			take_spouse_index:
 				printf("\t%d. Index: ", i);
-				scanf("%d", &index);
+				scanf(" %s", temp_string);
+				if(ifTheresAAlphabet(temp_string))
+					goto take_spouse_index;
+				
+				index = atoi(temp_string);
 				if(index<1 || index >4 || !checkIndex(index)) 
 					goto take_spouse_index;
 			addIndex(index);
@@ -235,8 +149,7 @@ void takePreferences()
 				printf("\tSpouse name at %d: ", index);
 				scanf(" %s", spouse_names[index-1]);
 				delete_unnecessary_spaces(spouse_names[index-1], "_");
-				lowerify(spouse_names[index-1]);
-				if((int)strlen(spouse_names[index-1])<3 || !allIsBetweenAlphabets(spouse_names[index-1]))
+				if((int)strlen(spouse_names[index-1])<3 || !allIsBetweenAlphabets(spouse_names[index-1], "_"))
 					goto take_spouse_name;
 			printf("\n");
 		}
@@ -251,14 +164,22 @@ void takePreferences()
 		{
 			take_children_index:
 				printf("\t%d. Index: ", i);
-				scanf("%d", &index);
+				scanf(" %s", temp_string);
+				if(ifTheresAAlphabet(temp_string))
+					goto take_children_index;
+				
+				index = atoi(temp_string);
 				if(index<1 || index >4 || !checkIndex(index)) 
 					goto take_children_index;
 			addIndex(index);
 			
 			take_number_of_childrens:
 				printf("\tNumber of childrens at %d: ", index);
-				scanf("%d", &children_numbers[index-1][0]);
+				scanf(" %s", temp_string);
+				if(ifTheresAAlphabet(temp_string))
+					goto take_number_of_childrens;
+					
+				children_numbers[index-1][0] = atoi(temp_string);
 				if(children_numbers[index-1][0]<0 || children_numbers[index-1][0]>10000000)
 					goto take_number_of_childrens;
 			printf("\n");
@@ -274,17 +195,21 @@ void takePreferences()
 		{
 			take_luxury_index:
 				printf("\t%d. Index: ", i);
-				scanf("%d", &index);
+				scanf(" %s", temp_string);
+				if(ifTheresAAlphabet(temp_string))
+					goto take_luxury_index;
+				
+				index = atoi(temp_string);
 				if(index<1 || index >4 || !checkIndex(index)) 
 					goto take_luxury_index;
 			addIndex(index);
-				
+	 
 			take_luxury_item:
 				printf("\tLuxury item at %d: ", index);
 				scanf(" %s", luxury_items[index-1]);
 				delete_unnecessary_spaces(luxury_items[index-1], "_");
-				lowerify(luxury_items[index-1]);
-				if((int)strlen(luxury_items[index-1])<3 || !allIsBetweenAlphabets(luxury_items[index-1]))
+				
+				if((int)strlen(luxury_items[index-1])<3 || !allIsBetweenLetterDigits(luxury_items[index-1], "_"))
 					goto take_luxury_item;
 			printf("\n");
 		}
@@ -294,7 +219,10 @@ void takePreferences()
 	printf("\t\n");
 	favn:
 		printf("Favourite Number (1-9): ");
-		scanf("%d", &favn);
+		scanf(" %s", temp_string);
+		if(ifTheresAAlphabet(temp_string))
+			goto favn;
+		favn = atoi(temp_string);
 		if(favn<1 || favn>9)
 			goto favn;
 	

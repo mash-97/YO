@@ -1,103 +1,7 @@
-#include <stdio.h>
-#include <string.h>
-#include <stdlib.h>
-#include <math.h>
-
-#if defined(_WIN32) || defined(_WIN64) || defined(WIN32)
-	#define touch "echo .> "
-	#define path_sep "\\"
-#else
-	#define touch "touch "
-	#define path_sep "/"
-#endif
+#include "lib_helper.h"
 
 int ntest_cases;
 long long int test_cases[100][3];
-
-int betweenAlphabets(char c)
-{
-	return (c>='A' && c<='Z') || (c>='a' && c<='z') ? 1 : 0;
-}
-
-int betweenDigits(char c)
-{
-	return (c>='0' && c<='9') ? 1 : 0;
-}
-
-int betweenTheseCases(char c, char *cases)
-{
-	int length = strlen(cases);
-	for(int i=0; i<length; i++)
-		if(c==cases[i])
-			return 1;
-	return 0;
-}
-
-int betweenLetterDigits(char c)
-{
-	return (betweenAlphabets(c) || betweenDigits(c)) ? 1 : 0;
-}
-
-int checkIfAllIsDigits(char *string)
-{
-	int length = (int)strlen(string);
-	for(int i=0; i<length; i++)
-		if(!betweenDigits(string[i]))
-			return 0;
-	return 1;
-}
-
-void delete_unnecessary_spaces(char *string, char *special_cases)
-{
-	int length = strlen(string);
-	int space = 0;
-	int i=0, s;
-	
-	
-	for(i=0; string[i] == ' ' && i<length; i++);
-	for(s = 0; i<length; i++)
-	{
-		if(betweenAlphabets(string[i]) || betweenDigits(string[i]) || betweenTheseCases(string[i], special_cases))
-		{
-			if(!space)	space = 1;
-			string[s++] = string[i];
-		}
-		else if(space)
-		{
-			space = 0;
-			string[s++] = ' ';
-		}
-	}
-	for(i=s-1; string[i]==' ' && i>=0; i--);
-	string[i+1] = 0;
-}
-
-int createFolder(char *folder_path)
-{	
-	char command[1000];
-	strcpy(command, "mkdir ");
-	strcat(command, folder_path);
-	
-	int result = system(command);
-	if(result==-1)
-	{
-		printf("Failed To Create The Folder: %s !!!\n\n", folder_path);
-		exit(-1);
-	}
-	return 1;
-}
-
-int createFile(char *path)
-{
-	FILE *result = fopen(path, "w");
-	if(result==NULL)
-	{
-		printf("\tFailed To Create The File: %s !!!\n\n", path);
-		exit(-1);
-	}
-	fclose(result);
-	return 1;
-}
 
 void burnNabTestCases(char *tc_file_path)
 {
@@ -148,13 +52,16 @@ int main()
 {
 	displayHeader();
 	createFolder("Nab_Attacks");
+	
 	char rabbits[100001];
 	char file_path[200001];
 	char * token = NULL;
 	
 	int token_length;
+	int flag;
 	
 	attack_rabbits:
+		flag = 0;
 		printf("\n\n------------------------------------\n");
 		printf("Attack -> ");
 		scanf(" %[^\n]", rabbits);
@@ -174,12 +81,13 @@ int main()
 			
 		else if(strcmp(rabbits, "*")==0)
 		{
-			strcpy(file_path, "Nab_Attacks");
+			strcpy(file_path, NAB_ATTACKs_FOLDER_NAME);
 			strcat(file_path, path_sep);
 			strcat(file_path, rabbits);
 			printf("\nGive your nab test cases for all:\n\n");
 			takeTestCases();
 			burnNabTestCases(file_path);
+			flag = 1;
 		}
 		else
 		{
@@ -197,15 +105,20 @@ int main()
 				}
 				else
 				{
-					strcpy(file_path, "Nab_Attacks");
+					strcpy(file_path, NAB_ATTACKs_FOLDER_NAME);
 					strcat(file_path, path_sep);
 					strcat(file_path, token);
 					burnNabTestCases(file_path);
+					flag = 1;
 				}
 				token = strtok(NULL, " ,");
 			}
 		}
-		printf("\nYo! Test Cases taken successfully!\n\n\a");
+		if(flag) 
+			printf("\nYo! Test Cases taken successfully !\n\n\a");
+		else
+			printf("\nTest Cases Not Taken !!!\n\n\a");
+		
 	goto attack_rabbits;	
 	
 	return 0;

@@ -18,21 +18,12 @@ int betweenDigits(char c)
 	return (c>='0' && c<='9') ? 1 : 0;
 }
 
-int betweenTheseCases(char c, char *cases)
-{
-	int length = strlen(cases);
-	for(int i=0; i<length; i++)
-		if(c==cases[i])
-			return 1;
-	return 0;
-}
-
 int betweenLetterDigits(char c)
 {
 	return (betweenAlphabets(c) || betweenDigits(c)) ? 1 : 0;
 }
 
-void delete_unnecessary_spaces(char *string, char *special_cases)
+void delete_unnecessary_spaces(char *string)
 {
 	int length = strlen(string);
 	int space = 0;
@@ -42,7 +33,7 @@ void delete_unnecessary_spaces(char *string, char *special_cases)
 	for(i=0; string[i] == ' ' && i<length; i++);
 	for(s = 0; i<length; i++)
 	{
-		if(betweenLetterDigits(string[i]) || betweenTheseCases(string[i], special_cases))
+		if(betweenLetterDigits(string[i]))
 		{
 			if(!space)	space = 1;
 			string[s++] = string[i];
@@ -60,6 +51,8 @@ void delete_unnecessary_spaces(char *string, char *special_cases)
 
 void namify(char *name)
 {
+	delete_unnecessary_spaces(name);
+	
 	int is_first = 1;
 	for(int i=0; name[i]!=0; i++)
 	{
