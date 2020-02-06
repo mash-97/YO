@@ -1,5 +1,4 @@
-require_relative("nab")
-require_relative("projectile")
+require_relative("program")
 
 class Player
 	attr_accessor :name
@@ -12,27 +11,22 @@ class Player
 	attr_accessor :projectile
 	attr_accessor :mash
 	
-	def initialize(pd)
+	attr_accessor :results_file_path
+	
+	def initialize(pd, programs_pth_hash)
 		@id  = pd[:id]
 		@name = pd[:user_name]
 		@folder_path = pd[:folder_path]
+		@results_file_path = File.join( @folder_path, "results" )
 		
 		@total_scores = 0.0
 		
-		@nab = Nab.new(self)
-		@projectile = Projectile.new(self)
+		@nab = Program.new(self, Program_Type.new(programs_pth_hash[:nab]))
+		@projectile = Program.new(self, Program_Type.new(programs_pth_hash[:projectile]))
+		
 		@mash = nil
 	end
 	
 end
 
 
-pds = [{:id=>"18115955", :user_name=>"mash", :folder_path=> "mash_18115955"}, {:id=>"18115935", :user_name=>"asma", :folder_path=>"asma_18115935"}]
-
-players = pds.collect{|pd| Player.new(pd)}
-
-players.each{|player|
-	puts("For player: #{player.name}")
-	puts("Base Test: #{player.nab.testBaseCases()}")
-}
-	

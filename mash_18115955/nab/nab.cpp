@@ -26,8 +26,6 @@ long long int countNABa(long long int n, long long int a, long long int b)
 
 int main()
 {
-	freopen("nab.in", "r", stdin);
-	freopen("nab.out", "w", stdout);
 
 	int t;
 	scanf("%d", &t);

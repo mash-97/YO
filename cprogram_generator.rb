@@ -1,16 +1,6 @@
-require 'timeout'
+require("timeout")
 
-class Array
-	def match(match_against_data)
-		self.flatten.each do 
-			|e|
-			if e.match(match_against_data) then return e.match(match_against_data) end
-		end
-		return nil
-	end
-end
-
-class CProgram
+class CProgram_Generator
 	attr_accessor :folder_path
 	attr_accessor :file_name
 	attr_accessor :input_file_name
@@ -40,10 +30,11 @@ class CProgram
 	
 	def run(test_case, time_limit)
 		return false if not @compiled
-		puts("-->For file: #{@file_name}")
-		puts("\tExecuting...")
-		Dir.chdir(@folder_path) do
 		
+		Dir.chdir(@folder_path) do
+			puts("-->For file: #{File.realpath(@file_name)}")
+			puts("\tExecuting...")
+			
 			# writing test_case into the .in file
 			in_file = File.open(@input_file_name, "w")
 			in_file.puts(test_case)
@@ -63,7 +54,7 @@ class CProgram
 				return false
 			end
 			@last_se_time = (end_time-start_time)
-			puts("\tExectued Successfully in %3.7f seconds."%(@last_se_time))
+			puts("\tExecuted Successfully in %3.7f seconds."%(@last_se_time))
 			puts()
 			return true
 		end
@@ -93,11 +84,39 @@ class CProgram
 		end
 	end
 	
+	
+	def removeFreopens()
+		Dir.chdir(@folder_path) do
+			file_code_lines = File.readlines(@file_name).select{|line| not line=~/freopen/}
+			
+			newl_count = 0
+			file_code_lines.select! do
+				|line|
+				if(line =~ /^\s*?$/) then
+					newl_count+=1
+				else
+					newl_count = 0
+				end
+				if line=~/^\s*?$/ and newl_count>1 then
+					false
+				else
+					true
+				end
+			end
+			
+			file = File.open(@file_name, "w")
+			file_code_lines.each{|line|file.puts(line)}
+			file.close()
+		end
+	end
+			
+			
+	
 	def compile()
-		puts("-->File name: #{@file_name}")
-		puts("\tCompiling ...")
 		@compiled = false
 		Dir.chdir(@folder_path) do 
+			puts("-->File name: #{File.realpath(@file_name)}")
+			puts("\tCompiling ...")
 			
 			#initialize input, output and executable file name
 			File.open(@input_file_name, "w").close()
@@ -116,6 +135,7 @@ class CProgram
 			# first compiling with g++
 			`g++  #{@file_name} -o #{@executable_file_name}`
 			@compiled = true if File.exists?(@executable_file_name)
+			removeFreopens()
 		end
 		puts("\tCompiled!")
 		puts()
@@ -123,3 +143,4 @@ class CProgram
 	end
 	
 end
+

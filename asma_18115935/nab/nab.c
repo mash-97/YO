@@ -20,10 +20,7 @@ long long int countNABc(long long int n, long long int a, long long int b)
 }
 int main()
 {
-	freopen("nab.in", "r", stdin);
-	freopen("nab.out", "w", stdout);
 
-	
 	long long int a, b, n;
 	int c = 0;
 	scanf("%d", &c);

@@ -16,6 +16,7 @@ char luxury_items[4][40];
 
 void initialize_fields()
 {
+	total_turn_value = 0;
 	// Initailize mash 
 	strcpy(mash[0], "Mansion");
 	strcpy(mash[1], "Apartment");
@@ -62,13 +63,6 @@ void getAttackerChoices()
 	strcpy(spouse_names[getAVoidIndexFor(spouse_names)], spouse_name);
 	strcpy(children_numbers[getAVoidIndexFor(children_numbers)], children_number);
 	strcpy(luxury_items[getAVoidIndexFor(luxury_items)], luxury_item);
-}
-
-void getTotalTurnValue()
-{
-	int player_choice, attacker_choice;
-	scanf("%d %d", &player_choice, &attacker_choice);
-	total_turn_value = player_choice + attacker_choice;
 }
 
 void getPlayerNames()
@@ -138,14 +132,15 @@ int main()
 	freopen("mash_game.out", "w", stdout);
 	
 	initialize_fields();
-	
-	getPlayerNames();							// player_name attacker_name
+	int fvn;
 	getPlayerChoicesFor(spouse_names);			// 3 times: index spouse_name
 	getPlayerChoicesFor(children_numbers);		// 3 times: index children_number
 	getPlayerChoicesFor(luxury_items);			// 3 times: index luxury_item_name
+	scanf("%d", &fvn);							// first person favourite num
+	total_turn_value += fvn;
 	getAttackerChoices();						// spouse_name children_number luxury_item_name
-	getTotalTurnValue();						// player's_turn_value attacker_turn_value
-	
+	scanf("%d", &fvn);							// second person favourite num
+	total_turn_value += fvn;
 	startMASH();								// Start the game.
 	
 	printf("%s %s %s %s\n", mash[getValIndexOf(mash)], spouse_names[getValIndexOf(spouse_names)], 
