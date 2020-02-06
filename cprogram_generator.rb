@@ -22,19 +22,19 @@ class CProgram_Generator
 			File.open(@output_file_name, "w").close()
 			
 			@executable_file_name = @file_name.sub(File.extname(@file_name), ".o")
-
-			self.compile()
 			
 		end
+		self.compile()
 	end
 	
 	def run(test_case, time_limit)
 		return false if not @compiled
 		
+		cwd = File.realpath(Dir.pwd())
 		Dir.chdir(@folder_path) do
-			puts("-->For file: #{File.realpath(@file_name)}")
+			puts("\t-->For file: #{File.realpath(@file_name).split(cwd)[1]}")
 			puts()
-			puts("\tExecuting...")
+			puts("\t\tExecuting...")
 			
 			# writing test_case into the .in file
 			in_file = File.open(@input_file_name, "w")
@@ -55,7 +55,7 @@ class CProgram_Generator
 				return false
 			end
 			@last_se_time = (end_time-start_time)
-			puts("\tExecuted Successfully in %3.7f seconds."%(@last_se_time))
+			puts("\t\tExecuted Successfully in %3.7f seconds."%(@last_se_time))
 			puts()
 			puts()
 			return true
@@ -116,10 +116,11 @@ class CProgram_Generator
 	
 	def compile()
 		@compiled = false
+		cwd = File.realpath(Dir.pwd())
 		Dir.chdir(@folder_path) do 
-			puts("-->File name: #{File.realpath(@file_name)}")
+			puts("\t-->File name: #{File.realpath(@file_name).split(cwd)[1]}")
 			puts()
-			puts("\tCompiling ...")
+			puts("\t\tCompiling ...")
 			
 			#initialize input, output and executable file name
 			File.open(@input_file_name, "w").close()
@@ -140,8 +141,8 @@ class CProgram_Generator
 			@compiled = true if File.exists?(@executable_file_name)
 			removeFreopens()
 		end
-		puts("\tCompiled!") if @compiled
-		puts("\t### Failed to compile !!!") if not @compiled
+		puts("\t\tCompiled!") if @compiled
+		puts("\t\t### Failed to compile !!!") if not @compiled
 		puts("\n\n")
 		return @compiled
 	end

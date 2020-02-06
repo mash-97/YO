@@ -55,12 +55,14 @@ class Program
 		
 		if not @base_program.run(test_case, @program_type.time_limit) then
 			@execution_time = 0.0
+			@owner.total_execution_time += @execution_time
 			@owner.total_scores += @program_type.basecase_passcore
 			return @program_type.basecase_passcore
 		end
 		
 		if not @program.run(test_case, @program_type.time_limit) then
 			@execution_time = Float::INFINITY
+			@owner.total_execution_time += @execution_time
 			return 0.0
 		end
 		
@@ -68,10 +70,12 @@ class Program
 		
 		if @program.readOutput() == @base_program.readOutput()
 			@owner.total_scores += @program_type.basecase_passcore
+			@owner.total_execution_time += @execution_time
 			return @program_type.basecase_passcore
 		else
 			@owner.total_scores += 0.0
 			@execution_time = Float::INFINITY
+			@owner.total_execution_time += @execution_time
 			return 0.0
 		end		
 	end

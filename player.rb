@@ -7,6 +7,7 @@ class Player
 	attr_accessor :folder_path
 	
 	attr_accessor :total_scores
+	attr_accessor :total_execution_time
 	
 	attr_accessor :nab
 	attr_accessor :projectile
@@ -21,6 +22,7 @@ class Player
 		@results_file_path = File.join( @folder_path, "results" )
 		
 		@total_scores = 0.0
+		@total_execution_time = 0.0
 		
 		@nab = Program.new(self, Program_Type.new(programs_pth_hash[:nab]))
 		@projectile = Program.new(self, Program_Type.new(programs_pth_hash[:projectile]))

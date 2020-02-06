@@ -2,7 +2,7 @@ require("yaml")
 
 puts("YOH !")
 puts("Waxxup !!!")
-puts("---------->Initializing.. .")
+puts("----------> Initializing.")
 
 require_relative("player")
 require_relative("program_type")
@@ -58,7 +58,13 @@ projectile_pthash = {
 players_data = checkOutPlayersData()
 players = players_data.collect{|pd_hash| Player.new(pd_hash, {:nab => nab_pthash, :projectile =>  projectile_pthash}) }
 
+puts("\n----------> Initializing Complete !")
+puts()
+puts()
+puts("Schedeuling Base Tests and Attacks. . .")
+puts()
 players.each do |player|
+	puts("----------------------------------------------------------------------")
 	puts("----------------------------------------------------------------------")
 	puts("Player Name: #{player.name} :: ID: #{player.id}")
 	puts()
@@ -133,3 +139,24 @@ players.each do |player|
 	puts()
 	puts()
 end
+
+
+players.sort! do |x,y| 
+	if (x.total_scores<=>y.total_scores)==0 then
+		x.total_execution_time <=> y.total_execution_time
+	else
+		x.total_scores<=>y.total_scores
+	end
+end
+
+puts()
+puts()
+puts("Player's stands:: ")
+count = 0
+players.each do |player|
+	count += 1
+	puts("#{count}: #{player.name}, #{player.id}, #{player.total_scores}")
+	puts()
+end
+
+
