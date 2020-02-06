@@ -1,4 +1,5 @@
 require_relative("program")
+require_relative("mash")
 
 class Player
 	attr_accessor :name
@@ -13,10 +14,10 @@ class Player
 	
 	attr_accessor :results_file_path
 	
-	def initialize(pd, programs_pth_hash)
-		@id  = pd[:id]
-		@name = pd[:user_name]
-		@folder_path = pd[:folder_path]
+	def initialize(pd_hash, programs_pth_hash)
+		@id  = pd_hash[:id]
+		@name = pd_hash[:name]
+		@folder_path = pd_hash[:folder_path]
 		@results_file_path = File.join( @folder_path, "results" )
 		
 		@total_scores = 0.0
@@ -24,7 +25,7 @@ class Player
 		@nab = Program.new(self, Program_Type.new(programs_pth_hash[:nab]))
 		@projectile = Program.new(self, Program_Type.new(programs_pth_hash[:projectile]))
 		
-		@mash = nil
+		@mash = Mash.new(self)
 	end
 	
 end

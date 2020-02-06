@@ -6,6 +6,12 @@ class Array
 		end
 		return nil
 	end
+	def removeNilOrZL
+		self.each do |s|
+			self.delete(s) if s.to_s.length==0
+		end
+		self
+	end
 end
 
 

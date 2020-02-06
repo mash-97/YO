@@ -33,6 +33,7 @@ class CProgram_Generator
 		
 		Dir.chdir(@folder_path) do
 			puts("-->For file: #{File.realpath(@file_name)}")
+			puts()
 			puts("\tExecuting...")
 			
 			# writing test_case into the .in file
@@ -55,6 +56,7 @@ class CProgram_Generator
 			end
 			@last_se_time = (end_time-start_time)
 			puts("\tExecuted Successfully in %3.7f seconds."%(@last_se_time))
+			puts()
 			puts()
 			return true
 		end
@@ -116,6 +118,7 @@ class CProgram_Generator
 		@compiled = false
 		Dir.chdir(@folder_path) do 
 			puts("-->File name: #{File.realpath(@file_name)}")
+			puts()
 			puts("\tCompiling ...")
 			
 			#initialize input, output and executable file name
@@ -137,8 +140,9 @@ class CProgram_Generator
 			@compiled = true if File.exists?(@executable_file_name)
 			removeFreopens()
 		end
-		puts("\tCompiled!")
-		puts()
+		puts("\tCompiled!") if @compiled
+		puts("\t### Failed to compile !!!") if not @compiled
+		puts("\n\n")
 		return @compiled
 	end
 	

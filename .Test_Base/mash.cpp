@@ -40,7 +40,6 @@ int getAVoidIndexFor(char items[4][40])
 	return -1;
 }
 
-
 void getPlayerChoicesFor(char field[4][40])
 {
 	char item[40];
@@ -80,7 +79,6 @@ int countItemsOf(char field[4][40])
 	return count;
 }
 
-
 int getValIndexOf(char field[4][40])
 {
 	for(int i=0; i<4; i++)
@@ -88,7 +86,6 @@ int getValIndexOf(char field[4][40])
 			return i;
 	return -1;
 }
-
 
 int driveThrough(int i, char field[4][40])
 {
@@ -108,7 +105,6 @@ int driveThrough(int i, char field[4][40])
 	return i;
 }
 
-
 void startMASH()
 {
 	int i = total_turn_value;
@@ -121,15 +117,10 @@ void startMASH()
 	}
 }
 				
-			
-			
-
-
 int main()
 {
+
 	// Interactive input and output with input.txt and output.txt
-	freopen("mash_game.in", "r", stdin);
-	freopen("mash_game.out", "w", stdout);
 	
 	initialize_fields();
 	int fvn;

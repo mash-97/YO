@@ -1,6 +1,29 @@
+require("yaml")
+
+puts("YOH !")
+puts("Waxxup !!!")
+puts("---------->Initializing.. .")
+
 require_relative("player")
 require_relative("program_type")
 require_relative("cprogram_generator")
+
+
+def checkOutPlayersData()
+
+	user_folder_paths = Dir.glob("*").select{|d| File.directory?(d) and d=~/^[a-zA-Z]{2,}_[0-9]{8,}$/}
+	users_data = []
+	user_folder_paths.each do 
+		|folder_paths| 
+		id = folder_paths.split("_")[1]
+		name = folder_paths.split("_")[0]
+		
+		ud_hash = {:name=> name, :id=> id, :folder_path => folder_paths}
+		
+		users_data << ud_hash
+	end
+	return users_data
+end
 
 nab_pthash = {
 
@@ -32,30 +55,81 @@ projectile_pthash = {
 }
 
 
-pds = [{:id=>"18115955", :user_name=>"mash", :folder_path=> "mash_18115955"}, 
-		{:id=>"18115935", :user_name=>"asma", :folder_path=>"asma_18115935"}]
+players_data = checkOutPlayersData()
+players = players_data.collect{|pd_hash| Player.new(pd_hash, {:nab => nab_pthash, :projectile =>  projectile_pthash}) }
 
-players = pds.collect{|pd| Player.new(pd, {:nab => nab_pthash, :projectile =>  projectile_pthash}) }
-
-players.each{|player|
-	puts("For player:: #{player.name} : #{player}")
-	puts("Testing nab program: ")
-	puts("Base Test for nab: #{player.nab.testBaseCases()}")
-	puts
-	puts("Starting attacks for nab program: ")
-	player.nab.attack(players)
-	puts("----------------------------------------------------------------")
-	
-	puts("Testing projectile program: ")
-	puts("Base Test for projectile: #{player.projectile.testBaseCases()}")
-	puts
-	puts("Starting attacks for projectile program: ")
-	player.projectile.attack(players)
-	puts()
-}
-
-
-puts("Scores: ")
 players.each do |player|
-	puts("#{player.name}: #{player.total_scores}")
+	puts("----------------------------------------------------------------------")
+	puts("Player Name: #{player.name} :: ID: #{player.id}")
+	puts()
+	puts()
+	puts("\tStarting NAB Schedeule:")
+	puts("\t--------> Checking existency of the NAB program: #{player.nab.program!=nil ? true : false}")
+	
+	if player.nab.program != nil and player.nab.program.compiled then
+		puts("\t--------> Testing the NAB for base test cases: ")
+		puts()
+		points = player.nab.testBaseCases()
+		puts("\t--------> #{player.name}'s NAB program executed with  #{points} point(s)")
+		puts()
+		puts("\t--------> Starting Attack method: ")
+		player.nab.startAttacks(players)
+		puts()
+		puts()
+		puts("\t-------->NAB Schedeule is finished!")
+		puts()
+		
+	else
+		if not player.nab.program.compiled then
+			puts("\t========> #{player.name}'s NAB program wasn't compiled !!!")
+		else
+			puts("\t########> #{player.name} doesn't have the NAB program")
+		end
+	end
+
+	puts("\tLeaving NAB Schedeule")
+	puts()
+	puts("\tAt this point #{player.name}'s total score is: #{player.total_scores}")
+	puts()
+	puts()
+	puts("\tStarting Projectile Schedeule:")
+	puts("\t--------> Checking existency of the Projectile program: #{player.projectile.program!=nil ? true : false}")
+	
+	if player.projectile.program != nil and player.projectile.program.compiled then
+		puts("\t--------> Testing the Projectile for base test cases: ")
+		points = player.projectile.testBaseCases()
+		puts("\t--------> #{player.name}'s Projectile program executed with  #{points} point(s)")
+		puts()
+		puts("\t--------> Starting Attack method: ")
+		player.projectile.startAttacks(players)
+		puts()
+		puts()
+		puts("\t-------->Projectile Schedeule is finished!")
+		puts()
+		
+		
+	else
+		if not player.nab.program.compiled then
+			puts("\t========> #{player.name}'s Projectile program wasn't compiled !!!")
+		else
+			puts("\t########> #{player.name} doesn't have the Projectile program")
+		end
+	end
+	puts("\tLeaving Projectile")
+	puts()
+	puts("\tAt this point #{player.name}'s total score is: #{player.total_scores}")
+	puts()
+	puts()
+	puts("\t%%%%%%%%> OH! FOOO I'M SO TIRED TO GET THIS WORK DONE!!!")
+	puts("\t********> DUDE! YOU ARE COMPUTER PROGRAM -_-")
+	puts()
+	puts()
+	puts("\tStarting MASH Schedeule:")
+	player.mash.start(players)
+	puts("\t-------->Leaving MASH Schedeule without any further notices !")
+	puts()
+	puts()
+	puts("At the end of general schedeules #{player.name}'s total score is : #{player.total_scores}")
+	puts()
+	puts()
 end

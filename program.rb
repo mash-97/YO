@@ -50,9 +50,6 @@ class Program
 	
 	
 	def testBaseCases()
-	
-		return false if @program==nil or @base_program==nil
-		return false if not @program.compiled and not @base_program.compiled
 		
 		test_case = File.readlines( @program_type.base_testcase_file_path ).join()
 		
@@ -79,13 +76,11 @@ class Program
 		end		
 	end
 	
-	def attack(players)
-		puts("players: #{players.collect{|p| p.name}}")
-		puts("attacks: #{attacks}")
+	def startAttacks(players)
 		players.each do |player|
 			next if player == @owner
-			attacks.each do |id, test_case_file_path|
-				if(id=~/\*/ || id.to_i == player.id.to_i) then
+			@attacks.each do |id, test_case_file_path|
+				if(id=~/\*/ or id.to_i == player.id.to_i) then
 					# read test_cases from test_case_file_path
 					test_case = File.readlines(test_case_file_path).join()
 					
