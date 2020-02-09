@@ -4,14 +4,6 @@
 #include <math.h>
 #include "lib_helper.h"
 
-#if defined(_WIN32) || defined(_WIN64) || defined(WIN32)
-	#define touch "echo .> "
-	#define path_sep "\\"
-#else
-	#define touch "touch "
-	#define path_sep "/"
-#endif
-
 
 char spouse_names[4][41];
 char luxury_items[4][41];
@@ -235,7 +227,7 @@ void displayHeader()
 	printf("\t\t\t--------------------\n");
 	printf("MASH Says:: \"In reality what we do is we always PLAY with our choices\"\n\n");
 }
-	
+
 int main()
 {
 	displayHeader();

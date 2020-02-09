@@ -4,10 +4,9 @@
 #define projectile "projectile"
 #define mash "mash"
 
-void copyDependencies(char *folder_path)
+void copyDependenciesTo(char *folder_path)
 {
 	char command[10001];
-	
 	// .Base/mash
 	strcpy(command, copy_command);
 	strcat(command, base);
@@ -15,17 +14,6 @@ void copyDependencies(char *folder_path)
 	strcat(command, mash);
 	strcat(command, " ");
 	strcat(command, folder_path);
-	strcat(command, copy_commands_attribute);
-	system(command);
-	
-	// .Base/projectile
-	strcpy(command, copy_command);
-	strcat(command, base);
-	strcat(command, path_sep);
-	strcat(command, projectile);
-	strcat(command, " ");
-	strcat(command, folder_path);
-	strcat(command, copy_commands_attribute);
 	system(command);
 	
 	// .Base/nab
@@ -35,8 +23,17 @@ void copyDependencies(char *folder_path)
 	strcat(command, nab);
 	strcat(command, " ");
 	strcat(command, folder_path);
-	strcat(command, copy_commands_attribute);
 	system(command);
+	
+	// .Base/projectile
+	strcpy(command, copy_command);
+	strcat(command, base);
+	strcat(command, path_sep);
+	strcat(command, projectile);
+	strcat(command, " ");
+	strcat(command, folder_path);
+	system(command);
+	
 }
 
 int main()
@@ -71,7 +68,7 @@ int main()
 	
 	createFolder(folder_path);
 	
-	copyDependencies(folder_path);
+	copyDependenciesTo(folder_path);
 	
 	printf("\n\nBase Dir and Files Created Successfully!! o-o\n");
 	printf("                                           V");

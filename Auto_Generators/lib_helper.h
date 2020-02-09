@@ -3,15 +3,12 @@
 #include <stdlib.h>
 
 #if defined(_WIN32) || defined(_WIN64) || defined(WIN32)
-	#define touch "echo .> "
 	#define path_sep "\\"
-	#define copy_command "xcopy "
-	#define copy_commands_attribute " /s /e /t /y /i "
+	#define copy_command "xcopy /s /e /t /y /i  "
 #else
-	#define touch "touch "
 	#define path_sep "/"
 	#define copy_command "cp -r "
-	#define copy_commands_attribute ""
+
 #endif
 
 #define PROJECTILE_ATTACKs_FOLDER_NAME ".Projectile_Attacks"
