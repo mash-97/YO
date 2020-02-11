@@ -5,6 +5,7 @@
 #if defined(_WIN32) || defined(_WIN64) || defined(WIN32)
 	#define path_sep "\\"
 	#define copy_command "xcopy /e "
+
 #else
 	#define path_sep "/"
 	#define copy_command "cp -r "
