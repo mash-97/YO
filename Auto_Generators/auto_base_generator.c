@@ -1,4 +1,5 @@
 #include "lib_helper.h"
+
 #define base ".Base"
 #define nab "nab"
 #define projectile "projectile"
@@ -14,6 +15,7 @@ void copyDependenciesTo(char *folder_path)
 	strcat(command, mash);
 	strcat(command, " ");
 	strcat(command, folder_path);
+	printf("Making stand of  mash folder .. \n");
 	system(command);
 	
 	// .Base/nab
@@ -23,6 +25,7 @@ void copyDependenciesTo(char *folder_path)
 	strcat(command, nab);
 	strcat(command, " ");
 	strcat(command, folder_path);
+	printf("Making stand of  nab folder ..\n");
 	system(command);
 	
 	// .Base/projectile
@@ -32,6 +35,7 @@ void copyDependenciesTo(char *folder_path)
 	strcat(command, projectile);
 	strcat(command, " ");
 	strcat(command, folder_path);
+	printf("Making stand of  projectile files..\n");
 	system(command);
 	
 }
@@ -39,7 +43,7 @@ void copyDependenciesTo(char *folder_path)
 int main()
 {
 	char user_name[40];
-	char id[10];
+	char id[20];
 	
 	get_user_name:
 		printf("Enter valid user name (without any space): ");
@@ -48,17 +52,22 @@ int main()
 		lowerify(user_name);
 		printf("### user_name: %s\n", user_name);
 		if(!allIsBetweenLetterDigits(user_name, ""))
+		{
+			printf("Invalid username !!!\n\n");
 			goto get_user_name;
+		}
 	
 	printf("\n");
 	get_id:
 		printf("Enter your id (without any '-' or space): ");
 		scanf(" %s", id);
 		delete_unnecessary_spaces(id, "");
-		printf("### user_id: %s\n", id);
-		if(!allIsBetweenDigits(id, ""))
+		printf("### user_id: %s\n\n", id);
+		if(!allIsBetweenDigits(id, "") || (int)strlen(id)>11 || (int)strlen(id)<7)
+		{
+			printf("Invalid ID !!!\n\n");
 			goto get_id;
-	
+		}
 	// make user_id folder
 	char folder_path[61];
 	
@@ -72,6 +81,9 @@ int main()
 	
 	printf("\n\nBase Dir and Files Created Successfully!! o-o\n");
 	printf("                                           V");
+	
+	getchar();
+	getchar();
 	return 0;
 }
 	

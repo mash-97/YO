@@ -5,10 +5,8 @@
 #include "lib_helper.h"
 
 #if defined(_WIN32) || defined(_WIN64) || defined(WIN32)
-	#define touch "echo .> "
 	#define path_sep "\\"
 #else
-	#define touch "touch "
 	#define path_sep "/"
 #endif
 

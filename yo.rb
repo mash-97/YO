@@ -4,9 +4,9 @@ puts("YOH !")
 puts("Waxxup !!!")
 puts("----------> Initializing.")
 
-require_relative("Ruby_Granular/player")
-require_relative("Ruby_Granular/program_type")
-require_relative("Ruby_Granular/cprogram_generator")
+require_relative(File.join("Ruby_Granulars", "player"))
+require_relative(File.join("Ruby_Granulars", "program_type"))
+require_relative(File.join("Ruby_Granulars", "cprogram_generator"))
 
 
 def checkOutPlayersData()
@@ -34,8 +34,8 @@ nab_pthash = {
 							:folder_name => "nab",
 							:attacks_folder_name => ".Nab_Attacks",
 							:program_file_rgx => /^.*?nab\.(c|cpp)$/,
-							:base_testcase_file_path => ".Test_Base/nab.tc",
-							:base_program => CProgram_Generator.new(".Test_Base/base_nab.c")
+							:base_testcase_file_path => File.join(".Test_Base", "nab.tc"),
+							:base_program => CProgram_Generator.new(File.join(".Test_Base","base_nab.c"))
 }
 				
 projectile_pthash = {
@@ -49,8 +49,8 @@ projectile_pthash = {
 							:program_file_rgx => /^.*?projectile\.(c|cpp)$/,
 							:attacks_folder_name => ".Projectile_Attacks",
 							
-							:base_testcase_file_path => ".Test_Base/projectile.tc",
-							:base_program => CProgram_Generator.new(".Test_Base/base_projectile.c")
+							:base_testcase_file_path => File.join(".Test_Base", "projectile.tc"),
+							:base_program => CProgram_Generator.new(File.join(".Test_Base", "base_projectile.c"))
 }
 
 

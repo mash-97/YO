@@ -1,9 +1,9 @@
 require_relative("cprogram_generator")
 
 class Mash
-	MASH_PROGRAM = CProgram_Generator.new(".Test_Base/mash.cpp")
+	MASH_PROGRAM = CProgram_Generator.new(File.join(".Test_Base", "mash.cpp"))
 	MASH_FOLDER_NAME = "mash"
-	MASH_PREF_FILE_PATH = "mash/.mash.pref"
+	MASH_PREF_FILE_PATH = File.join("mash", ".mash.pref")
 
 	
 	attr_accessor :owner
@@ -39,14 +39,25 @@ class Mash
 				if(id=~/\*/ or id =~ Regexp.new(player.id.to_s)) then
 					puts("\n\t\tAttacking to: #{player.id} :: #{player.name}")
 					@owner.sendMessage("\n--> Mash -> #{player.id}:#{player.name}\n")
+					@owner.sendMessage("\n\t\tPreferences are: ")
+					@owner.sendMessage("\n\t\t"+File.readlines(player.mash.pref_file_path).join("\t\t"))
+					@owner.sendMessage("\n")
+					@owner.sendMessage("\n\t\tAttack values are: ")
+					@owner.sendMessage("\n\t\t"+File.readlines(attack_data_file_path).join("\t\t"))
+					
 					player.sendMessage("\n--> Mash <- #{@owner.id}:#{@owner.name}\n")
+					player.sendMessage("\n\t\tYour preferences: ")
+					player.sendMessage("\n\t\t"+File.readlines(player.mash.pref_file_path).join("\t\t"))
+					player.sendMessage("\n\t\tAttack Values are: ")
+					player.sendMessage("\n\t\t"+File.readlines(attack_data_file_path).join("\t\t"))
+					player.sendMessage("\n")
 					
 					if not File.exists?(player.mash.pref_file_path) then
 						@owner.sendMessage("\n\t\tDoesn't have any preference file !!!\n")
 						player.sendMessage("\t\t\tYou don't have any preference file !!!\n")
 						next
 					end
-						
+					
 					# creating test_case from player's mash pref file and @owner's attack file 
 					test_case = createMashTestCase( player.mash.pref_file_path, attack_data_file_path )
 					
@@ -54,9 +65,9 @@ class Mash
 					if MASH_PROGRAM.run(test_case, 10) then
 						# fetch result from mash_program
 						result = MASH_PROGRAM.readOutput()
-						puts("&&***********> result: #{result}")
+						puts("&& ***********> result: #{result}")
 						results = result.split(" ").select{|r| r=~/^[a-z_A-Z0-9]+$/}
-						puts("&&***********> results: #{results}")
+						puts("&& ***********> results: #{results}")
 						
 						h_result = {:home=> results[0], :spouse=> results[1], :childrens=> results[2], :luxury => results[3]}
 						
@@ -65,9 +76,9 @@ class Mash
 						mash_data_from_attack = quantizeMashData(File.readlines(attack_data_file_path).join())
 						mash_data_from_pref = quantizeMashDataFromPrefFile(player.mash.pref_file_path)
 						
-						puts("&&************> mash_data_from_result: #{mash_data_from_result}")
-						puts("&&************> mash_data_from_attack: #{mash_data_from_attack}")
-						puts("&&************> mash_data_from_pref: #{mash_data_from_pref}")
+						puts("&& ************> mash_data_from_result: #{mash_data_from_result}")
+						puts("&& ************> mash_data_from_attack: #{mash_data_from_attack}")
+						puts("&& ************> mash_data_from_pref: #{mash_data_from_pref}")
 						# match values 
 						match_value_for_attacker = matchValue(mash_data_from_result, mash_data_from_attack)
 						match_value_for_rabbit = matchValue(mash_data_from_result, mash_data_from_pref)
@@ -108,9 +119,7 @@ class Mash
 	def writeResults(player, hash_results, attack_data_file_path)
 		
 		@owner.sendMessage("\n\t\tSuccessfully attacked to id: #{player.id}, user_name: #{player.name}")
-		@owner.sendMessage("\n\t\tAttacked value was:: ")
-		@owner.sendMessage(File.readlines(attack_data_file_path).join("\t\t"))
-		@owner.sendMessage("\n")
+		@owner.sendMessage("\n\n")
 		@owner.sendMessage("\n\t\tResults:: ")
 		
 		@owner.sendMessage("\n\t\tHome: #{hash_results[:home]}")

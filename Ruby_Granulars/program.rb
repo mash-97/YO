@@ -23,17 +23,17 @@ class Program
 		@owner = owner_obj
 		@program_type = program_type_obj
 		
-		@folder_path = @owner.folder_path+"/"+@program_type.folder_name
+		@folder_path = File.join( @owner.folder_path, @program_type.folder_name)
 		
-		files = Dir.glob("#{@folder_path}/*")
+		files = Dir.glob("#{@folder_path}#{File::SEPARATOR}*")
 		
 		@program_file_path = files.match( @program_type.program_file_rgx ) != nil ? 
 									files.match(@program_type.program_file_rgx)[0] : nil
 									
-		@attacks_file_path = @folder_path+"/"+ @program_type.attacks_folder_name
+		@attacks_file_path = File.join( @folder_path, @program_type.attacks_folder_name)
 		@attacks = {}
 		
-		files = Dir.glob("#{@attacks_file_path}/*")
+		files = Dir.glob("#{@attacks_file_path}#{File::SEPARATOR}*")
 		
 		files.each do |file_path|
 			@attacks[File.basename(file_path)] = file_path

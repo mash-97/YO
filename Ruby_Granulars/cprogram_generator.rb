@@ -1,6 +1,7 @@
 require("timeout")
 
 class CProgram_Generator
+
 	attr_accessor :folder_path
 	attr_accessor :file_name
 	attr_accessor :input_file_name

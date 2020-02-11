@@ -55,7 +55,7 @@ void displayHeader()
 	printf("                   28 93\n");
 	
 }
-	
+
 int main()
 {
 	displayHeader();

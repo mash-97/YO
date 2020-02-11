@@ -236,7 +236,14 @@ int main()
 	strcpy(file_path, ".mash.pref");
 	burnPreferences(file_path);
 
-	printf("\nYo! Your preferences are taken carefully!\n\n\a");
-	for(int i=0; i<=1000000000; i++);
+	printf("\n\nYour preferences are: \n");
+	
+	displayTakenChoices(1);
+	displayTakenChoices(2);
+	displayTakenChoices(3);
+	
+	printf("\n\nYo! Your preferences are taken carefully!\n\n\a");
+	getchar();
+	getchar();
 	return 0;
 }

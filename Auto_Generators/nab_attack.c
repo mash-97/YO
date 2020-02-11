@@ -55,7 +55,7 @@ void displayHeader()
 	printf("                   1 1  300\n");
 	
 }
-	
+
 int main()
 {
 	displayHeader();
